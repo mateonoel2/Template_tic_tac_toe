@@ -11,32 +11,34 @@ db = SQLAlchemy(app)
 @dataclass
 class Player(db.Model):
     id: int
-    firstname: str
-    lastname: str
+    username: str
+    password: str
 
     id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(100), nullable=False)
-    lastname = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
     
 
     def __repr__(self):
-        return f'<Player {self.firstname}>'
+        return f'<Player {self.username}>'
     
-def test_connection():
-    with app.app_context():
-        db.create_all()
-        player_test = Player(firstname='john', lastname='doe')
+    def check_password(self, password):
+        return self.password == password
+    
+with app.app_context():
+    db.create_all()
 
-        db.session.add(player_test)
-        db.session.commit()
+@app.route('/')
+def menu():
+    return render_template('menu.html')
 
-        students = Player.query.all()
+@app.route('/signup_menu')
+def signup_menu():
+    return render_template('signup.html')
 
-        print(students)
-        print(jsonify(students))
-
-test_connection()
-
+@app.route('/login_menu')
+def login_menu():
+    return render_template('login.html')
 
 @app.route('/players', methods=['GET'])
 def route_get_players():
@@ -66,14 +68,14 @@ def get_players():
     return jsonify(players)
 
 def get_player_by_id():
-    # Player.query.filter_by(id=3).first()
+
     return 'TODO'
 
 def insert_player(data):
-    player = Player(firstname=data["firstname"], lastname=data["lastname"])
+    player = Player(username=data["username"], password=data["password"])
     db.session.add(player)
     db.session.commit()
-    return jsonify(player)
+    return redirect('/')
 
 def update_player():
     return 'TODO'
