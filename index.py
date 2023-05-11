@@ -21,10 +21,22 @@ class Player(db.Model):
 
     def __repr__(self):
         return f'<Player {self.firstname}>'
+    
+def test_connection():
+    with app.app_context():
+        db.create_all()
+        player_test = Player(firstname='john', lastname='doe')
 
-@app.route('/')
-def menu():
-    return render_template('menu.html')
+        db.session.add(player_test)
+        db.session.commit()
+
+        students = Player.query.all()
+
+        print(students)
+        print(jsonify(students))
+
+test_connection()
+
 
 @app.route('/players', methods=['GET'])
 def route_get_players():
@@ -36,14 +48,8 @@ def route_get_player(player_id):
 
 @app.route('/players/add',  methods = ['POST'])
 def route_add_player():
-    firstname = request.form['firstname']
-    lastname = request.form['lastname']
-    print(firstname)
-    print(lastname)
-    player = Player(firstname=firstname, lastname=lastname)
-    db.session.add(player)
-    db.session.commit()
-    return redirect('/')
+    player = request.get_json()
+    return insert_player(player)
 
 @app.route('/players/update',  methods = ['PUT'])
 def route_update_player():
@@ -63,14 +69,17 @@ def get_player_by_id():
     # Player.query.filter_by(id=3).first()
     return 'TODO'
 
-def insert_player():
-    return 'TODO'
+def insert_player(data):
+    player = Player(firstname=data["firstname"], lastname=data["lastname"])
+    db.session.add(player)
+    db.session.commit()
+    return jsonify(player)
 
 def update_player():
     return 'TODO'
 
 def delete_player(player_id):
     player = Player.query.get_or_404(player_id)
-    # db.session.delete(player)
-    # db.session.commit()
-    return 'TODO'
+    db.session.delete(player)
+    db.session.commit()
+    return "SUCCESS"
