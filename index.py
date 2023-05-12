@@ -62,7 +62,6 @@ def route_update_player():
 def route_delete_player(player_id):
     return delete_player(player_id)
 
-
 def get_players():
     players = Player.query.all()
     return jsonify(players)
