@@ -67,15 +67,15 @@ def get_players():
     players = Player.query.all()
     return jsonify(players)
 
-def get_player_by_id():
-
-    return 'TODO'
+def get_player_by_id(player_id):
+    player = Player.query.get_or_404(player_id)
+    return jsonify(player)
 
 def insert_player(data):
     player = Player(username=data["username"], password=data["password"])
     db.session.add(player)
     db.session.commit()
-    return redirect('/')
+    return "SUCCESS"
 
 def update_player():
     return 'TODO'

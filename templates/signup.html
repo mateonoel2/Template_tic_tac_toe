@@ -26,9 +26,11 @@
           'Content-Type': 'application/json'
         }
       }).then(response => response.text())
-        .then(html => {
-            document.body.innerHTML = html;
-        })
+      .then(text => {
+          if (text === "SUCCESS") {
+              window.location.href = "/";
+          } 
+      })
     }
   </script>
 
