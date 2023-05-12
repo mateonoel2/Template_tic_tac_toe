@@ -1,10 +1,12 @@
 from dataclasses import dataclass
-from flask import Flask, jsonify,  request, render_template, redirect
+from flask import Flask, jsonify,  request, render_template, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.secret_key = 'my_secret_key'
 
 db = SQLAlchemy(app)
 
@@ -39,6 +41,20 @@ def signup_menu():
 @app.route('/login_menu')
 def login_menu():
     return render_template('login.html')
+
+@app.route('/game')
+def game():
+    return render_template('game.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    player = Player.query.filter_by(username=data["username"]).first()
+    if player and player.check_password(data["password"]):
+        return 'SUCCESS'
+    else:
+        flash('Invalid username or password')
+        return redirect('/login_menu')
 
 @app.route('/players', methods=['GET'])
 def route_get_players():
