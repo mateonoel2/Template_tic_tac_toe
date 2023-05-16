@@ -7,7 +7,7 @@ conn = http.client.HTTPConnection("127.0.0.1", 5000)
 
 # Create the data to send in the request body
 data = {
-    "username": "Noel",
+    "username": "Profe",
     "password": "123"
 }
 
