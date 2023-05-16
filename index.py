@@ -26,7 +26,22 @@ class Player(db.Model):
     
     def check_password(self, password):
         return self.password == password
-    
+
+@dataclass
+class Game(db.Model):
+    id: int
+    player1_id: int
+    player2_id: int
+    score: int
+
+    id = db.Column(db.Integer, primary_key=True)
+    player1_id = db.Column(db.Integer, nullable=False)
+    player2_id = db.Column(db.Integer, nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f'<Game {self.id}>'
+
 with app.app_context():
     db.create_all()
 
