@@ -19,7 +19,7 @@
       var password = document.getElementById("password").value;
       var data = { "username": username, "password": password };
   
-      fetch('/players/add', {
+      fetch('/players', {
         method: 'POST',
         body: JSON.stringify(data),
         headers:{
